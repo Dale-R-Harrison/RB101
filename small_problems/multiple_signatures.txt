@@ -1,0 +1,5 @@
+1. IndexError exception
+
+2. Prints out "beats me'"
+
+3. Prints out 49
