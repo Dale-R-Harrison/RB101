@@ -1,0 +1,51 @@
+1)
+Given two integers.
+
+create a variable, result.
+sum both integers, saving sum to result.
+
+START
+
+#Given two integers
+
+SET result = integer_one * integer_two
+
+2) Given array of strings
+create an variable, string.
+iterating through each element of the array
+  add the element to the end of the space (should I add a space delimiter between each?)
+return string
+
+START
+
+# Given an array of strings called "strings"
+
+SET iterator = 0
+SET string = ""
+
+WHILE iterator < length of strings
+  SET string = string + (index of strings that is == iterator)
+  iterator = iterator + 1
+
+READ string
+
+3) Given an array of integers
+
+Create an empty array, called new_array
+Iterating through each element of given array
+  Use a variable to keep track of iterations
+  Every other iteration, add current element of array as a new element to the end of given array
+return new array
+
+START
+
+# Given an array of integers called "integers"
+
+SET iterator = 0
+SET new_array = []
+
+While iterator < length of integers
+  IF iterator is even or 0
+    SET last element in new_array to the current iterated element of integers
+  SET iterator = iterator = iterator + 1
+RETURN new_array
