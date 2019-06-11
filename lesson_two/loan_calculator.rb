@@ -20,7 +20,7 @@ def prompt(message)
 end
 
 def valid_input(input)
-  input.to_f > 0 && input != '' 
+  input.to_f > 0 && input != ''
 end
 
 system("clear")
@@ -80,7 +80,6 @@ loop do
   break unless again.downcase.start_with?('y')
 
   system("clear")
-
 end
 
- prompt "Thank you for using MOnthly Loan Payment Calculator. Goodbye!"
+prompt "Thank you for using MOnthly Loan Payment Calculator. Goodbye!"
