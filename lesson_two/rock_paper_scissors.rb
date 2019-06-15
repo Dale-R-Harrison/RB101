@@ -1,5 +1,4 @@
 
-require 'pry'
 VALID_CHOICES = ["rock", "paper", "scissors", "lizard", "spock"]
 ALT_CHOICES = ["r", "p", "sc", "l", "sp"]
 WINNING_VALUES = {
