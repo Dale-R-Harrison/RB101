@@ -1,0 +1,14 @@
+Given the code:
+
+name = 'Bob'
+save_name = name
+name.upcase!
+puts name, save_name
+
+The output will be:
+
+BOB
+BOB
+
+This is because both name and save_name point to the same object, and the #upcase! method 
+modified that object. 

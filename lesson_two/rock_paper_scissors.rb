@@ -60,7 +60,7 @@ def print_welcome
   prompt "Welcome! Let's play Rock, Paper, Scissors, Lizard, Spock!"
   puts "-----------------------------------------------------------"
   puts ""
-  prompt "Each round, you may pick an option. The first to five rounds wins!"
+  prompt "Each round, you may pick an option. The first to win five rounds wins!"
 end
 
 def play_again?
@@ -85,7 +85,7 @@ loop do
   totals = [0, 0]
   loop do
     puts ""
-    choice = get_valid_choice
+    choice = recieve_valid_choice
     computer_choice = VALID_CHOICES.sample
 
     prompt "You chose: #{choice}; Computer chose: #{computer_choice}"
@@ -103,7 +103,7 @@ loop do
     end
   end
 
-  break if play_again? == false
+  break unless play_again?
 end
 
 prompt "Thank you for playing! Goodbye."
