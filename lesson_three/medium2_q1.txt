@@ -1,0 +1,6 @@
+
+In the second set of puts the outer and inner ids will be identical. They wil also match the ids in the first set of puts.
+
+IN the third set of puts, the outer_ids will have changed, as the variables are pointing at new objects.
+
+ In the final set of puts inside the block, both outer and inner ids will be the same, and the same as the ids in the third set of puts.

@@ -1,0 +1,47 @@
+
+1. Given the code:
+
+numbers = [1, 2, 2, 3]
+numbers.uniq
+
+puts numbers
+
+The expected output woud be:
+1
+2
+2
+3
+This is because the #uniq method does not mutate the caller. The array numbers was unchanged. 
+
+2. 1) "!=" simply means "not equals", and shoudl be used in conditional statements.
+
+2) ! is the logical NOT operator in Ruby. It flips the truth value of what it precedes. For example, if "bool_one" is true, then "!bool_one" is false.
+
+3) "!" is often used after methods as a convention to conver that the method mutates the caller. ! itself has no effect on the method, it is just an indicator.
+
+4) '?' before something indicates a one character string. ? is also a ternary operator along with :.
+
+5) "?" is often used at the end of a method name to indicate that it returns only a boolean value. Like !, it has no effect on the mathod.
+
+6. !! returns what the objects boolean equivalent. (Essentially calling the logical NOT twice.)
+
+3. 
+advice = "Few things in life are as important as house training your pet dinosaur."
+advice = advice.gsub(/important/, "urgent")
+
+4.
+Both methods mutate the caller, meaning they change the array they are called on. #delete removes every element that matches its argument. #delete_at removes the element at a given index.
+
+So numbers.delete_at(1), would change the numbers array to [1, 3, 4, 5].
+numbers.delete(1) would change the numbers array to [2, 3, 4, 5] 
+
+5. See easy1_q5.rb
+
+6. See easy1_q6.rb
+
+7. The expression will return 42. Number will still be 2.
+
+8. flinstones.flatten!
+
+9. flintstones.keep_if{ |key, value| key == "Barney" }
+flintstones = flintstones.flatten

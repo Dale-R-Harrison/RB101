@@ -1,0 +1,18 @@
+
+Code group A prints the following:
+
+"one is: one"
+"two is: two"
+"three is: three"
+
+THis is because the method changes the variable it is passed to by referencing new objects, not mutating the originals. So the values of the variables are reassigned only inside the method. Outside they remain the same. 
+
+Code group B prints the same as above, and for the same reasons. All that changed was that the variables were reassigned to strings inside the method, rather than to other variables. 
+
+Code group C prints the following:
+
+"one is: two"
+"two is: three"
+"three is: one"
+
+This is because in this code group the method mutates its arguments(this is because it calls the #gsub! method on them). So the variables outside the method are changed. 

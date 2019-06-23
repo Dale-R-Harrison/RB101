@@ -1,0 +1,13 @@
+Given the code:
+
+answer = 42
+
+def mess_with_it(some_number)
+  some_number += 8
+end
+
+new_answer = mess_with_it(answer)
+
+p answer - 8
+
+The output will be 34. This is because answer is not modified by the mess_with_it method. 

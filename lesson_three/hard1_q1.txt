@@ -1,0 +1,2 @@
+
+When the variable greeting is referenced, it is nil. This is because it was initialized whithin the if conditional, but--as that branch wasn't executed--it was given no value. 

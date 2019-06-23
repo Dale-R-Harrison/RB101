@@ -1,0 +1,2 @@
+
+Yes, the family's data was ransacked. All ages were changed to 42 and all genders to "other". Normally, assignment will not modify the caller. However, it can alter the elements of arrays and hashes, which is what happened here. 

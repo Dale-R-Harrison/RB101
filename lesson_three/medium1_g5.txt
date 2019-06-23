@@ -1,0 +1,32 @@
+Given the following code:
+
+limit = 15
+
+def fib(first_num, second_num)
+  while first_num + second_num < limit
+    sum = first_num + second_num
+    first_num = second_num
+    second_num = sum
+  end
+  sum
+end
+
+result = fib(0, 1)
+puts "result is #{result}"
+
+An error is out put, relating to undefined variable. The reason for this is that the local variable limitis defined outside the method and so is not available inside the method body unless it is passed as an argument. In order to fix this, limit can be be defined as part of the method body, rather than outside it. Like this:
+
+def fib(first_num, second_num)
+  limit = 15
+  while first_num + second_num < limit
+    sum = first_num + second_num
+    first_num = second_num
+    second_num = sum
+  end
+  sum
+end
+
+result = fib(0, 1)
+puts "result is #{result}" 
+
+Alternatively, if he wants limit to be able to be modified, he can add it as an argument when defining the method.  

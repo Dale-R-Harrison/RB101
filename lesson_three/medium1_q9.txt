@@ -1,0 +1,11 @@
+Given the code:
+
+def foo(param = "no")
+  "yes"
+end
+
+def bar(param = "no")
+  param == "no" ? "yes" : "no"
+end
+
+A call of bar(foo) would return "no". The return value of foo is always yes, regardless of parameter. This is because it does nothing with the parameter. This means that bar(foo) is the equivalent of bar("yes") which woud return "no".

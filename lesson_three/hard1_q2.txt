@@ -1,0 +1,4 @@
+
+puts greetings => {a: => "hi there"}
+
+This is because informal_greeting was pointed at the value of the key a: when it was initialized. Because << changes the abject a variable refers to rather than creating a new abject, the value tyed to greetings[a:] changes.

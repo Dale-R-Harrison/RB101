@@ -1,0 +1,2 @@
+
+There is significant difference between the two implementations. When the method uses << it mutates the caller, meaning the array is modified outside of the method. Using the + operator only changes the array within the method; rather than modifying the passed array, the method returns a new array. 

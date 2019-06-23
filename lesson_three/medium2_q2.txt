@@ -1,0 +1,6 @@
+
+The outer ids will not change when the objects are passed into the method. So the inital ids for both the outer and inner objects will be the same. 
+
+After reassignment inside the method the objects inside the method will have new ids. THe objects outside the method are unchanged and have their original ids. 
+
+Finally the variable defined inside the method are inaccessible and trying to use them will require the program to rescue from exception and put "ugh ohh'"
