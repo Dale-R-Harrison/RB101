@@ -1,0 +1,2 @@
+
+The returned string is different because the #split returns a array which is a different object than the initial string. the #each method then returns the same array, and the #join returns a new string with yet another new string. 

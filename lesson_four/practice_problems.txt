@@ -1,0 +1,64 @@
+1. The return value of the given code: 
+
+[1, 2, 3].select do |num|
+  num > 5
+  'hi'
+end
+
+will be [1, 2, 3]. This is because the block always returns 'hi', which has a truthy value. 
+
+2. The count method evaluates the block's return value to see if it is true(or truthy), or if it's false. It only counts elements of the collection for which the block is true. In the given code, for example, returns 1. We can find this out by reading the documentation. 
+
+3. The return value of the given code:
+
+[1, 2, 3].reject do |num|
+  puts num
+end
+
+returns [1, 2, 3]. This is because #reject is, in a way, the opposite of #elect. It takes elements for whcih the passed block returns false, and adds them to a new array, which it returns. The return value for the block in the example is always nil, a value that evaluates to false. So #reject takes all the elements. 
+
+4. The return value for the given code:
+
+['ant', 'bear', 'cat'].each_with_object({}) do |value, hash|
+  hash[value[0]] = value
+end
+
+is {'a' => 'ant', 'b' => 'bear', 'c' = 'cat''}. This is because #each_with_object executes the code for each element of the passed aray (value), then returns hash. The block repeatadly sets the the first letter of value as a key in hash, and associates it with the current element, value. 
+
+5. In the given code,
+
+hash = { a: 'ant', b: 'bear' }
+hash.shift
+
+the method #shift removes an key, value pair from the hash, mutating it. In this case, at least in current version of Ruby, it is the first initialized pair that is removed, since that is how order is preserved in hashes. so hash should become, {b: 'bear'}. We fidn this out by reading the documentation. 
+
+6. THe return value of the given statement:
+
+['ant', 'bear', 'caterpillar'].pop.size
+
+is 11. This is because the first method in the chain returns the string 'caterpillar', and then size gives the length of that returned string, which is 11. 
+
+7. The return value of the passed block:
+
+[1, 2, 3].any? do |num|
+  puts num
+  num.odd?
+end
+
+is a boolean, true or false, based on the return value of num.odd?. It will be true for 1 and 3, false for 2. The return value of the block is determined by the last expression in it, which is num.odd? The return value of the method #any> in this case is true. It determines this by evaluating the passed block for each element of the passed collection. If the block ever evaluates as true, the method returns true. Additionally, because of the puts call, every element that is iterated over is output to the screen, though this does not effect the return value. In this case, only 1 is outputted.
+
+8. Array.take works by returning the first elements of the passed array as a new array; the number of elements returned is determined by the argument given. So arr.take(2) in this example returns [1, 2]. This method is not destructive. We know this by looking at the documentation. 
+
+9. The return value of map is [nil, 'bear'], This is because map returns a new array, which each element equal to the result of running the block on the element of the same index in the original array. 
+
+10. The return value of the given code:
+
+[1, 2, 3].map do |num|
+  if num > 1
+    puts num
+  else
+    num
+  end
+end
+
+is [1, nil, nil]. This is becasue the puts call, which in the cases where num > 1 is the last expression of the block, returns nil. For other cases, the return value of the block is num. 
