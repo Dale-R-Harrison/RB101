@@ -1,0 +1,47 @@
+
+Example 3:
+Outputs:
+1
+3
+=> [1, 3]
+
+Line 1, #map method call on outer aray, returns an array [1, 3] which is not used
+Lines 1-4, block execution, on each sub-array, returns the first element of each subarray,which is used by the map method for transformation.
+Line 2, #first method call on the passes sub array, returns the 0-indexed element of that array, which is given to puts method call on the same line. The put outputs the a string representations of the passed value to the screen and returns nil. This return value is not used.
+Line 3, #first method call, again on the passed array and returns same value as above, which is used as the return value of the block. 
+
+Example 4:
+Outputs: 
+18
+7
+12
+=> [[18, 7], [3, 12]]
+
+Line 1: variable my_array is set equal to the return value of the #each call. Each always returns the originally passed array, so my_arr points to [[18, 7], [3, 12]]
+Line1: #each call is made on [[18, 7], [3, 12]] with a block as an argument. Its return value is the array it was called on, which is set to my_arr
+Line 1-7: Block execution. Each sub array is passed to the block assigned to arr. An each call is made on sub-array. THe return value of the block is the passed subarray, but nothing is done with this return value.
+Line 2-6: Inner block execution. Takes each element of the sub array, assigned to num. THe return value is the sub array, which determines the return value of outer block. 
+Line 2: each method is called on each sub array, with a block as an argument. returns the value of current element of subarray. Nothing is doen with this return value as outer each method ignores it. 
+#Line 3: If statement is used. value of passed element of inner array is checked to se if it is greater than 5. if it is the puts method is called on num. otherwise the block continues executing. 
+#line 4: puts method call. returns nil. Nothing is done with this return value. A string equivalent of num is output to the screen. 
+
+Example 5: 
+Outputs:
+=>[[2, 4], [6, 8]]
+
+Line 1: #map method is called on outer array, with a block as argument. Each subarray is passed to this block as arr. The return value of the block is used for transformation. The return value of map is the transformed array.
+Line 2: #map method call is made on passed subarray, wiht a block as an argument. each element of the subarray is passed to the block as num. The return value of the argument block is used for transformation. The map call returns the transformed subarray, which is the return value of the outer block. 
+Line 3: THe passed element of the subarray, num, is multiplied by 2. THe result determines the return value of the inner block.
+
+Example 6: 
+Outputs:
+ [{:c => "cat"}]
+
+ Line 1: #select call on outer array, with a block as an argument. passes inner hash into block as hash. uses boolean return value of block for selection. The return value of #select is an array that only includes elements of outer array for which block returned true, which in this case is  [{ :c => "cat" }]
+ Line 2: #all method call on inner_hash which was passed to block, with an inner block as an argument. passes the key and value into the block. The return value of the call is either false or true depending on return value of the block. This return value is used by the select method to determine its return value. 
+ Line 3: #to_s is called on the passed key, which returns the string equivalent of key. This return value is used by == 
+ Line 3: The element at the 0 index of passed value is compared for equality (by ==) against the return value of #to_s. The evaluation of this expression, which is a boolean becomes the return value of the inner block, which is used by the #all? call in line 2.  
+
+Example 10:
+Outputs:
+[[[2, 3], [4, 5]], [6, 7]]
