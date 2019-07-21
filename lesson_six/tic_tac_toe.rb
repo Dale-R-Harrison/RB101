@@ -1,5 +1,3 @@
-require 'pry'
-require 'pry-byebug'
 
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
@@ -7,6 +5,7 @@ COMPUTER_MARKER = 'O'
 WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
                 [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # columns
                 [[1, 5, 9], [3, 5, 7]]              # diagonals
+STARTING_PLAYER = 'Choose'
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -108,7 +107,7 @@ def detect_winner(brd)
   nil
 end
 
-def display_round_results(score1, score2)
+def display_round_totals(score1, score2)
   prompt "You have won #{score1} rounds. Computer has won #{score2} rounds."
   prompt "The first to win 5 rounds will win the game."
   prompt "Are you ready for the next round?: "
@@ -175,20 +174,70 @@ def winning_square(brd)
   square
 end
 
+def place_piece!(board, current_player)
+  if current_player == 'Player'
+    player_places_piece!(board)
+  elsif current_player == 'Computer'
+    computer_places_piece!(board)
+  end
+end
+
+def alternate_player(current_player)
+  current_player == 'Player' ? 'Computer' : 'Player'
+end
+
+def initialize_player
+  if STARTING_PLAYER == 'Choose'
+    answer = nil
+    prompt "Enter '1' to play first. Enter '2' to let Computer play first."
+    loop do 
+      answer = gets.chomp
+      break if answer == '1' || answer == '2'
+      prompt "Incorrect selection. Enter '1' or '2'"
+    end
+    answer == '1' ? 'Player' : 'Computer'
+  else
+    STARTING_PLAYER
+  end
+end
+
+def greeting(player)
+  prompt "Welcome to Tic Tac Toe!"
+  prompt "#{player} will make the first move."
+  prompt "Are you ready to begin? (Enter 'yes' to begin):"
+  loop do
+    answer = gets.chomp.downcase
+    break if answer.start_with?('y')
+    prompt "I'm sorry, you must enter 'yes' to begin."
+  end
+end
+
+def play_again?
+  answer = false
+  prompt "Play again? (yes or no)"
+  loop do
+    answer = gets.chomp.downcase
+    break if answer.start_with?('y') || answer.start_with?('n')
+    prompt "I'm sorry. Please enter either 'yes' or 'no'."
+  end
+
+  answer.start_with?('y') ? true : false
+end
+
 loop do
   player_score = 0
   computer_score = 0
+  plays_first = initialize_player
+  greeting(plays_first)
 
   loop do 
     board = initialize_board
+    current_player = plays_first
 
     loop do
       display_board(board)
-
-      player_places_piece!(board)
-      break if round_won?(board) || board_full?(board)
-
-      computer_places_piece!(board)
+      place_piece!(board, current_player)
+      current_player = alternate_player(current_player)
       break if round_won?(board) || board_full?(board)
     end
 
@@ -209,13 +258,11 @@ loop do
       display_game_results(player_score, computer_score)
       break
     else 
-      display_round_results(player_score, computer_score)
+      display_round_totals(player_score, computer_score)
     end
   end
 
-  prompt "Play again? (y or n)"
-  answer = gets.chomp
-  break unless answer.downcase.start_with?('y')
+  break unless play_again?
 end
 
 prompt "Thanks for playing Tic Tac Toe! Goodbye!"
