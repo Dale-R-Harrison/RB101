@@ -11,28 +11,23 @@ def prompt(msg)
   puts "=> #{msg}"
 end
 
-def joinor (arr, spacer = ', ', last = 'or')
+def joinor(arr, spacer = ', ', last = 'or')
   result = ''
   if arr.length == 1
     result << arr[0].to_s
   elsif arr.length == 2
     result = "#{arr[0]} #{last} #{arr[1]}"
-  else  
-    arr.each do |e|
-      if e == arr[-1]
-        result << last + ' '
-        result << e.to_s
-      else
-        result << e.to_s + spacer
-      end
-    end
+  else
+    arr[-1] = "#{last} #{arr.last}"
+    result = arr.join(spacer)
   end
   result
 end
 
 # rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/MethodLength
 def display_board(brd)
-  system 'clear' 
+  system 'clear'
   puts "You're a #{PLAYER_MARKER}. Computer is a #{COMPUTER_MARKER}."
   puts "The first to win 5 rounds wins the game!"
   puts ""
@@ -50,6 +45,7 @@ def display_board(brd)
   puts ""
 end
 # rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/MethodLength
 
 def empty_squares(brd)
   brd.keys.select { |num| brd[num] == INITIAL_MARKER }
@@ -64,7 +60,7 @@ end
 def player_places_piece!(brd)
   square = ''
   loop do
-    prompt "Choose a position to place a piece: (#{joinor(empty_squares(brd))}):"
+    prompt "Choose a square to place a piece: (#{joinor(empty_squares(brd))}):"
     square = gets.chomp.to_i
 
     break if empty_squares(brd).include?(square)
@@ -84,7 +80,7 @@ def computer_places_piece!(brd)
   else
     square = empty_squares(brd).sample
   end
-  
+
   brd[square] = COMPUTER_MARKER
 end
 
@@ -124,7 +120,7 @@ end
 
 def display_game_results(score1, score2)
   prompt "You have won #{score1} rounds. Computer has won #{score2} rounds."
-  if score1 >= 5 
+  if score1 >= 5
     prompt "You have won the game!"
   else
     prompt "Computer has won the game!"
@@ -135,10 +131,10 @@ def game_won?(score1, score2)
   score1 >= 5 || score2 >= 5 ? true : false
 end
 
-
 def at_risk?(brd)
   WINNING_LINES.any? do |line|
-    brd.values_at(*line).count(PLAYER_MARKER) == 2 && (brd.values_at(*line).any?{ |e| e == INITIAL_MARKER})
+    brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
+      (brd.values_at(*line).any? { |e| e == INITIAL_MARKER })
   end
 end
 
@@ -157,7 +153,8 @@ end
 
 def winning_move?(brd)
   WINNING_LINES.any? do |line|
-    brd.values_at(*line).count(COMPUTER_MARKER) == 2 && (brd.values_at(*line).any?{ |e| e == INITIAL_MARKER})
+    brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
+      (brd.values_at(*line).any? { |e| e == INITIAL_MARKER })
   end
 end
 
@@ -190,7 +187,7 @@ def initialize_player
   if STARTING_PLAYER == 'Choose'
     answer = nil
     prompt "Enter '1' to play first. Enter '2' to let Computer play first."
-    loop do 
+    loop do
       answer = gets.chomp
       break if answer == '1' || answer == '2'
       prompt "Incorrect selection. Enter '1' or '2'"
@@ -217,7 +214,7 @@ def play_again?
   prompt "Play again? (yes or no)"
   loop do
     answer = gets.chomp.downcase
-    break if answer.start_with?('y') || answer.start_with?('n')
+    break if answer.start_with?('y', 'n')
     prompt "I'm sorry. Please enter either 'yes' or 'no'."
   end
 
@@ -230,7 +227,7 @@ loop do
   plays_first = initialize_player
   greeting(plays_first)
 
-  loop do 
+  loop do
     board = initialize_board
     current_player = plays_first
 
@@ -257,7 +254,7 @@ loop do
     if game_won?(player_score, computer_score)
       display_game_results(player_score, computer_score)
       break
-    else 
+    else
       display_round_totals(player_score, computer_score)
     end
   end
