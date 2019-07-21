@@ -25,11 +25,14 @@ def joinor(arr, spacer = ', ', last = 'or')
 end
 
 # rubocop:disable Metrics/AbcSize
-# rubocop:disable Metrics/MethodLength
-def display_board(brd)
-  system 'clear'
+def board_header
   puts "You're a #{PLAYER_MARKER}. Computer is a #{COMPUTER_MARKER}."
   puts "The first to win 5 rounds wins the game!"
+end
+
+def display_board(brd)
+  system 'clear'
+  board_header
   puts ""
   puts "     |     |"
   puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}"
@@ -45,7 +48,6 @@ def display_board(brd)
   puts ""
 end
 # rubocop:enable Metrics/AbcSize
-# rubocop:enable Metrics/MethodLength
 
 def empty_squares(brd)
   brd.keys.select { |num| brd[num] == INITIAL_MARKER }
@@ -186,6 +188,7 @@ end
 def initialize_player
   if STARTING_PLAYER == 'Choose'
     answer = nil
+    prompt "Let's play Tic Tac Toe!"
     prompt "Enter '1' to play first. Enter '2' to let Computer play first."
     loop do
       answer = gets.chomp
