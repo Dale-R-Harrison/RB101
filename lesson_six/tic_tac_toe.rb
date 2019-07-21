@@ -225,6 +225,7 @@ def play_again?
 end
 
 loop do
+  system 'clear'
   player_score = 0
   computer_score = 0
   plays_first = initialize_player
