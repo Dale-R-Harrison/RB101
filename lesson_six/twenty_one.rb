@@ -140,35 +140,44 @@ def display_round_winner(total1, total2)
   end
 end
 
-# rubocop:disable Metrics/CyclomaticComplexity
-# rubocop:disable Metrics/PerceivedComplexity
+def tie?(total1, total2)
+  total1 == total2
+end
+
+def won_by_score?(total1, total2)
+  winning_score = total1 > total2 || twenty_one?(total1)
+  winning_score && bust?(total1) == false
+end
+
 def retrieve_round_winner(total1, total2)
-  if total1 == total2
+  if tie?(total1, total2)
     'Tied'
-  elsif bust?(total1) || twenty_one?(total2)
-    'Dealer'
-  elsif bust?(total2) || twenty_one?(total1)
-    'Player'
-  elsif total1 > total2
+  elsif bust?(total2) || won_by_score?(total1, total2)
     'Player'
   else
     'Dealer'
   end
 end
-# rubocop:enable Metrics/CyclomaticComplexity
-# rubocop:enable Metrics/PerceivedComplexity
 
-def play_again?
-  prompt "Would you like to play again? (Yes or no.)"
+def play_again?(answer)
+  answer == 'yes' || answer == 'y'
+end
+
+def valid_play_again?(answer)
+  valid_answers = %w(yes y n no)
+  valid_answers.include?(answer)
+end
+
+def retrieve_play_again
+  prompt "would you like to play again? (Yes or no.)"
   answer = ' '
   loop do
     answer = gets.chomp.downcase
-    break if answer == 'yes' || answer == 'y'
-    break if answer == 'no' || answer == 'n'
+    break if valid_play_again?(answer)
     prompt "Please enter yes or no."
   end
 
-  answer == 'yes' || answer == 'y'
+  answer
 end
 
 def round_end_message(score1, score2)
@@ -204,14 +213,35 @@ def retrieve_winner(player_rounds)
   end
 end
 
-def display_winner(round_total1, round_total2)
-  winner = retrieve_winner(round_total1, round_total2)
+def display_winner(round_total1)
+  winner = retrieve_winner(round_total1)
   prompt "#{winner} has wone the game!"
 end
 
-dealer_rounds = 0
-player_rounds = 0
+def stay?(answer)
+  answer == 'stay' || answer == 's'
+end
+
+def valid_answer?(answer)
+  valid_answers = %w(stay s hit h)
+  valid_answers.include?(answer)
+end
+
+def retrieve_hit_or_stay
+  prompt "Hit or stay?"
+  answer = ' '
+  loop do
+    answer = gets.chomp.downcase
+    break if valid_answer?(answer)
+    prompt "Please enter either 'hit' or 'stay'."
+  end
+
+  answer
+end
+
 loop do
+  dealer_rounds = 0
+  player_rounds = 0
   loop do
     deck = initialize_deck
     players_hand = []
@@ -225,18 +255,7 @@ loop do
     loop do
       break if twenty_one?(player_total)
       loop do
-        answer = nil
-        prompt "Hit or stay?"
-        loop do
-          answer = gets.chomp.downcase
-          if answer == 'hit' || answer == 'stay'
-            break
-          else
-            prompt "Please enter either 'hit' or 'stay'."
-          end
-        end
-
-        break if answer == 'stay'
+        break if stay?(retrieve_hit_or_stay)
 
         draw(deck, players_hand)
         player_total = retrieve_hand_value(players_hand)
@@ -280,7 +299,7 @@ loop do
   end
 
   display_winner(player_rounds)
-  break unless play_again?
+  break unless play_again?(retrieve_play_again)
 end
 
 prompt "Thank you for playing Twenty-One!"
