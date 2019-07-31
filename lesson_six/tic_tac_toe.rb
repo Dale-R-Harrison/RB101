@@ -73,15 +73,15 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  if winning_move?(brd)
-    square = winning_square(brd)
-  elsif at_risk?(brd)
-    square = risky_square(brd)
-  elsif empty_squares(brd).include?(5)
-    square = 5
-  else
-    square = empty_squares(brd).sample
-  end
+  square = if winning_move?(brd)
+             winning_square(brd)
+           elsif at_risk?(brd)
+             risky_square(brd)
+           elsif empty_squares(brd).include?(5)
+             5
+           else
+             empty_squares(brd).sample
+           end
 
   brd[square] = COMPUTER_MARKER
 end
@@ -130,7 +130,7 @@ def display_game_results(score1, score2)
 end
 
 def game_won?(score1, score2)
-  score1 >= 5 || score2 >= 5 ? true : false
+  score1 >= 5 || score2 >= 5
 end
 
 def at_risk?(brd)
@@ -207,7 +207,7 @@ def greeting(player)
   prompt "Are you ready to begin? (Enter 'yes' to begin):"
   loop do
     answer = gets.chomp.downcase
-    break if answer.start_with?('y')
+    break if answer == 'yes' || answer == 'y'
     prompt "I'm sorry, you must enter 'yes' to begin."
   end
 end
@@ -217,11 +217,11 @@ def play_again?
   prompt "Play again? (yes or no)"
   loop do
     answer = gets.chomp.downcase
-    break if answer.start_with?('y', 'n')
+    break if answer == 'yes' || answer == 'no'
     prompt "I'm sorry. Please enter either 'yes' or 'no'."
   end
 
-  answer.start_with?('y') ? true : false
+  answer == 'yes'
 end
 
 loop do

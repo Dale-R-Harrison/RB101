@@ -13,6 +13,10 @@ FACES = { 2 => 'Two',
           'K' => 'King',
           'A' => 'Ace' }
 
+ROUND_LIMIT = 5
+BUST_LIMIT = 21
+DEALER_LIMIT = 17
+
 def prompt(msg)
   puts "=> #{msg}"
 end
@@ -57,7 +61,7 @@ def draw(deck, hand)
   deck[drawn_suit].delete(drawn_card)
 end
 
-def display_hands(hand1, hand2)
+def display_game_state(hand1, hand2, total)
   display_array1 = hand1.map { |card| FACES[card] }
   i = 0
   display_array2 = hand2.map do |card|
@@ -72,34 +76,33 @@ def display_hands(hand1, hand2)
   system 'clear'
   prompt "Dealer has: #{joiner(display_array2)}."
   prompt "You have: #{joiner(display_array1)}"
-  current_value = retrieve_hand_value(hand1)
-  prompt "The current value of your hand is : #{current_value}."
+  prompt "The current value of your hand is : #{total}."
 end
 
 def display_final_hands(hand1, hand2)
-  display_array1 = hand1.map { |e| FACES[e] }
-  display_array2 = hand2.map { |e| FACES[e] }
+  players_cards = joiner(hand1.map { |e| FACES[e] })
+  dealers_cards = joiner(hand2.map { |e| FACES[e] })
 
   system 'clear'
   prompt "Final results: "
   puts "-------------------"
-  prompt "Dealer has: #{joiner(display_array2)}."
-  prompt "Dealer's final total is: #{retrieve_hand_value(hand2)}."
-  prompt "You have: #{joiner(display_array1)}"
-  prompt "Your final total is: #{retrieve_hand_value(hand1)}."
-  if bust?(hand1)
+  prompt "Dealer has: #{dealers_cards}."
+  prompt "You have: #{players_cards}"
+end
+
+def display_final_total(total1, total2)
+  prompt "Dealer's final total is: #{total2}."
+  prompt "Your final total is: #{total1}"
+  puts "-------------------"
+  if bust?(total1)
     prompt 'You busted!'
-  elsif bust?(hand2)
+  elsif bust?(total2)
     prompt 'Dealer busted!'
   end
 end
 
-def twenty_one?(hand1, hand2 = [])
-  if retrieve_hand_value(hand1) == 21 || retrieve_hand_value(hand2) == 21
-    true
-  else
-    false
-  end
+def twenty_one?(total)
+  total == BUST_LIMIT
 end
 
 def retrieve_hand_value(hand)
@@ -117,36 +120,43 @@ def retrieve_hand_value(hand)
 end
 
 def retrieve_ace_value(current_total)
-  if current_total > 10
+  if current_total > BUST_LIMIT - 11
     current_total + 1
   else
     current_total + 11
   end
 end
 
-def bust?(hand)
-  retrieve_hand_value(hand) > 21
+def bust?(total)
+  total > BUST_LIMIT
 end
 
-def display_winner(hand1, hand2)
-  if retrieve_hand_value(hand1) == retrieve_hand_value(hand2)
+def display_round_winner(total1, total2)
+  result = retrieve_round_winner(total1, total2)
+  if result == 'Tied'
     prompt "The dealer and the player have tied."
   else
-    prompt "#{retrieve_winner(hand1, hand2)} wins!"
+    prompt "#{result} wins!"
   end
 end
 
-def retrieve_winner(hand1, hand2)
-  if bust?(hand1) || twenty_one?(hand2)
+# rubocop:disable Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/PerceivedComplexity
+def retrieve_round_winner(total1, total2)
+  if total1 == total2
+    'Tied'
+  elsif bust?(total1) || twenty_one?(total2)
     'Dealer'
-  elsif bust?(hand2) || twenty_one?(hand1)
+  elsif bust?(total2) || twenty_one?(total1)
     'Player'
-  elsif retrieve_hand_value(hand1) > retrieve_hand_value(hand2)
+  elsif total1 > total2
     'Player'
   else
     'Dealer'
   end
 end
+# rubocop:enable Metrics/CyclomaticComplexity
+# rubocop:enable Metrics/PerceivedComplexity
 
 def play_again?
   prompt "Would you like to play again? (Yes or no.)"
@@ -161,6 +171,21 @@ def play_again?
   answer == 'yes' || answer == 'y'
 end
 
+def round_end_message(score1, score2)
+  prompt "You have won #{score1} rounds. Dealer has won #{score2} rounds."
+  prompt "The first to win #{ROUND_LIMIT} rounds will win the game."
+  prompt "Are you ready for the next round?: "
+
+  loop do
+    round_answer = gets.chomp.downcase
+    if round_answer == 'yes' || round_answer == 'y'
+      break
+    else
+      prompt "Enter 'yes' to continue: "
+    end
+  end
+end
+
 system 'clear'
 prompt "Welcome to Twenty-One!"
 prompt "Are you ready to begin? (Enter yes or no.)"
@@ -171,52 +196,91 @@ loop do
   prompt "Enter 'yes' to begin."
 end
 
+def retrieve_winner(player_rounds)
+  if player_rounds >= ROUND_LIMIT
+    'Player'
+  else
+    'Dealer'
+  end
+end
+
+def display_winner(round_total1, round_total2)
+  winner = retrieve_winner(round_total1, round_total2)
+  prompt "#{winner} has wone the game!"
+end
+
+dealer_rounds = 0
+player_rounds = 0
 loop do
-  deck = initialize_deck
-  players_hand = []
-  dealers_hand = []
-
-  initialize_hands(deck, players_hand, dealers_hand)
-  display_hands(players_hand, dealers_hand)
-
   loop do
-    break if twenty_one?(players_hand, dealers_hand)
+    deck = initialize_deck
+    players_hand = []
+    dealers_hand = []
+
+    initialize_hands(deck, players_hand, dealers_hand)
+    player_total = retrieve_hand_value(players_hand)
+    dealer_total = retrieve_hand_value(dealers_hand)
+    display_game_state(players_hand, dealers_hand, player_total)
+
     loop do
-      answer = nil
-      prompt "Hit or stay?"
+      break if twenty_one?(player_total)
       loop do
-        answer = gets.chomp.downcase
-        if answer == 'hit' || answer == 'stay'
-          break
-        else
-          prompt "Please enter either 'hit' or 'stay'."
+        answer = nil
+        prompt "Hit or stay?"
+        loop do
+          answer = gets.chomp.downcase
+          if answer == 'hit' || answer == 'stay'
+            break
+          else
+            prompt "Please enter either 'hit' or 'stay'."
+          end
         end
+
+        break if answer == 'stay'
+
+        draw(deck, players_hand)
+        player_total = retrieve_hand_value(players_hand)
+
+        if bust?(player_total)
+          puts "You bust!"
+          break
+        elsif twenty_one?(player_total)
+          break
+        end
+
+        display_game_state(players_hand, dealers_hand, player_total)
       end
 
-      break if answer == 'stay'
+      player_total = retrieve_hand_value(players_hand)
+      break if twenty_one?(player_total) || bust?(player_total)
 
-      draw(deck, players_hand)
-      if bust?(players_hand)
-        puts "You bust!"
-        break
-      elsif twenty_one?(players_hand)
-        break
+      loop do
+        dealer_total = retrieve_hand_value(dealers_hand)
+        break if dealer_total >= DEALER_LIMIT
+        draw(deck, dealers_hand)
       end
 
-      display_hands(players_hand, dealers_hand)
+      break
     end
 
-    break if twenty_one?(players_hand) || bust?(players_hand)
+    player_total = retrieve_hand_value(players_hand)
+    dealer_total = retrieve_hand_value(dealers_hand)
+    display_final_hands(players_hand, dealers_hand)
+    display_final_total(player_total, dealer_total)
+    display_round_winner(player_total, dealer_total)
 
-    loop do
-      break if retrieve_hand_value(dealers_hand) >= 17
-      draw(deck, dealers_hand)
+    winner = retrieve_round_winner(player_total, dealer_total)
+    if winner == 'Player'
+      player_rounds += 1
+    elsif winner == 'Dealer'
+      dealer_rounds += 1
     end
-
-    break
+    break if dealer_rounds >= ROUND_LIMIT || player_rounds >= ROUND_LIMIT
+    round_end_message(player_rounds, dealer_rounds)
   end
 
-  display_final_hands(players_hand, dealers_hand)
-  display_winner(players_hand, dealers_hand)
+  display_winner(player_rounds)
   break unless play_again?
 end
+
+prompt "Thank you for playing Twenty-One!"
